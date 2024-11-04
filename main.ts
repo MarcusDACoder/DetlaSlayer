@@ -49,6 +49,16 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite2, otherS
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     direction = 1
 })
+sprites.onDestroyed(SpriteKind.Enemey2, function (sprite) {
+    dino_2_strength = dino_2_strength + 5
+    statusbarMob2 = statusbars.create(20, 4, StatusBarKind.EnemyHealth)
+    statusbarMob2.value = dino_2_strength
+    dione2 = sprites.create(assets.image`myImage3`, SpriteKind.Enemey2)
+    dione2.setPosition(randint(0, 157), randint(0, 120))
+    statusbarMob2.setLabel("HP")
+    statusbarMob2.attachToSprite(dione2)
+    dione2.follow(PLAYER_SPRITE, 10)
+})
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     direction = 3
 })
@@ -63,9 +73,21 @@ controller.B.onEvent(ControllerButtonEvent.Released, function () {
     pause(500)
     fire_cooldown = 0
 })
+sprites.onDestroyed(SpriteKind.Enemy, function (sprite) {
+    dino_1_srength = dino_1_srength + 5
+    statusbarMobs = statusbars.create(20, 4, StatusBarKind.EnemyHealth)
+    statusbarMobs.value = dino_1_srength
+    statusbarMobs.setLabel("HP")
+    dinoe = sprites.create(assets.image`dino2`, SpriteKind.Enemy)
+    dinoe.setPosition(randint(0, 157), randint(0, 120))
+    statusbarMobs.attachToSprite(dinoe)
+    dinoe.follow(PLAYER_SPRITE, 10)
+})
 let projectile: Sprite = null
 let fire_cooldown = 0
 let direction = 0
+let dino_1_srength = 0
+let dino_2_strength = 0
 let dinoe: Sprite = null
 let dione2: Sprite = null
 let PLAYER_SPRITE: Sprite = null
@@ -96,8 +118,10 @@ controller.moveSprite(PLAYER_SPRITE, 65, 65)
 statusbarMobs.attachToSprite(dinoe)
 statusbarMob2.attachToSprite(dione2)
 statusbar.attachToSprite(PLAYER_SPRITE)
-dinoe.follow(PLAYER_SPRITE, 0)
-dione2.follow(PLAYER_SPRITE, 0)
+dinoe.follow(PLAYER_SPRITE, 10)
+dione2.follow(PLAYER_SPRITE, 10)
+dino_2_strength = 50
+dino_1_srength = 50
 game.onUpdate(function () {
     characterAnimations.runFrames(
     dinoe,
@@ -438,4 +462,12 @@ game.onUpdate(function () {
         sprites.destroy(statusbarMob2, effects.fire, 500)
         sprites.destroy(dione2, effects.fire, 500)
     }
+})
+forever(function () {
+    music.play(music.createSong(hex`003c000408050101001c000f05001202c102c20100040500280000006400280003140006020004020100000400012004000600011b06000800011b08000a0001190a000c00011b0e000f00012010001200012012001400012414001600012516001800012724002800012728002a0001272a002c0001292c002e00012a2e003000012c3e004000012c40004200012c42004400012c44004600012946004800012a4a004c0001294c004e0001275c006000012760006400012565006600012566006700012767006800012972007600012776007800012578007a0001247a007c0001247d007e0001247e007f0001257f008000012788008c0001258c008e0001248e00900001229000920001229300940001229400950001249500960001259a009b0001299d009e000127`), music.PlaybackMode.UntilDone)
+    music.play(music.createSong(hex`00f0000408010101001c000f05001202c102c20100040500280000006400280003140006020004240000000400011b04000800011b08000c00011b14001800011b18001c00011b1c002000011b`), music.PlaybackMode.UntilDone)
+    music.play(music.createSong(hex`00f0000408010101001c000f05001202c102c201000405002800000064002800031400060200041e0000000400011b04000800011b08000c00011b18001c00011b1c002000011b`), music.PlaybackMode.UntilDone)
+    music.play(music.createSong(hex`003c000408050200001c00010a006400f401640000040000000000000000000000000005000004060040004800012c01001c000f05001202c102c20100040500280000006400280003140006020004ea0000000400012004000600011b06000800011b08000a0001190a000c00011b0e000f00012010001200012012001400012414001600012516001800012724002800012728002a0001272a002c0001292c002e00012a2e003000012c40004800012c48005000012a5000580001275c006000012760006400012565006600012566006700012767006800012972007600012776007800012578007a0001247a007c0001247d007e0001247e007f0001257f008000012788008c0001258c008e0001248e00900001229000920001229300940001229400950001249500960001259c009e0001299e00a0000127`), music.PlaybackMode.UntilDone)
+    music.play(music.createSong(hex`00f0000408010101001c000f05001202c102c20100040500280000006400280003140006020004240000000400011b04000800011b08000c00011b14001800011b18001c00011b1c002000011b`), music.PlaybackMode.UntilDone)
+    music.play(music.createSong(hex`00f0000408010101001c000f05001202c102c201000405002800000064002800031400060200041e0000000400011b04000800011b08000c00011b18001c00011b1c002000011b`), music.PlaybackMode.UntilDone)
 })
