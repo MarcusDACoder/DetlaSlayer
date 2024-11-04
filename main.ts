@@ -2,6 +2,27 @@ namespace SpriteKind {
     export const Enemey2 = SpriteKind.create()
 }
 let myDart = 0
+controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+    direction = 0
+})
+controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (fire_cooldown == 0) {
+        fire_cooldown = 1
+        if (direction == 0) {
+            projectile = sprites.createProjectileFromSprite(assets.image`up`, PLAYER_SPRITE, 0, -50)
+        }
+        if (direction == 1) {
+            projectile = sprites.createProjectileFromSprite(assets.image`right`, PLAYER_SPRITE, 50, 0)
+        }
+        if (direction == 2) {
+            projectile = sprites.createProjectileFromSprite(assets.image`left`, PLAYER_SPRITE, -50, 0)
+        }
+        if (direction == 3) {
+            projectile = sprites.createProjectileFromSprite(assets.image`down`, PLAYER_SPRITE, 0, 50)
+        }
+        pause(100)
+    }
+})
 sprites.onOverlap(SpriteKind.Enemey2, SpriteKind.Projectile, function (sprite, otherSprite) {
     statusbarMob2.value = statusbarMob2.value - 2
 })
@@ -11,6 +32,9 @@ sprites.onOverlap(myDart, SpriteKind.Enemy, function (sprite, otherSprite) {
     dinoe.follow(PLAYER_SPRITE, 0)
     pause(50)
     dinoe.follow(PLAYER_SPRITE, 30)
+})
+controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
+    direction = 2
 })
 sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Projectile, function (sprite, otherSprite) {
     statusbarMobs.value = statusbarMobs.value - 2
@@ -22,6 +46,12 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite2, otherS
     pause(200)
     dinoe.follow(PLAYER_SPRITE, 30)
 })
+controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
+    direction = 1
+})
+controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+    direction = 3
+})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemey2, function (sprite, otherSprite) {
     pause(200)
     statusbar.value = statusbar.value - 5
@@ -30,38 +60,12 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemey2, function (sprite, other
     dione2.follow(PLAYER_SPRITE, 30)
 })
 controller.B.onEvent(ControllerButtonEvent.Released, function () {
-    if (characterAnimations.matchesRule(PLAYER_SPRITE, characterAnimations.rule(Predicate.MovingRight, Predicate.FacingRight))) {
-        playerShootright = darts.create(assets.image`right`, SpriteKind.Projectile, PLAYER_SPRITE.x, PLAYER_SPRITE.y)
-        playerShootright.throwDart()
-    } else {
-        sprites.destroy(playerShootright)
-    }
-    if (characterAnimations.matchesRule(PLAYER_SPRITE, characterAnimations.rule(Predicate.MovingUp))) {
-        playerShootUp = darts.create(assets.image`up`, SpriteKind.Projectile, PLAYER_SPRITE.x, PLAYER_SPRITE.y)
-        playerShootUp.angle = 90
-        playerShootUp.throwDart()
-    } else {
-        sprites.destroy(playerShootUp)
-    }
-    if (characterAnimations.matchesRule(PLAYER_SPRITE, characterAnimations.rule(Predicate.MovingLeft))) {
-        playerShootleft = darts.create(assets.image`left`, SpriteKind.Projectile, PLAYER_SPRITE.x, PLAYER_SPRITE.y)
-        playerShootleft.angle = 180
-        playerShootleft.throwDart()
-    } else {
-        sprites.destroy(playerShootleft)
-    }
-    if (characterAnimations.matchesRule(PLAYER_SPRITE, characterAnimations.rule(Predicate.MovingDown))) {
-        playerShootDown = darts.create(assets.image`down`, SpriteKind.Projectile, PLAYER_SPRITE.x, PLAYER_SPRITE.y)
-        playerShootDown.angle = 270
-        playerShootDown.throwDart()
-    } else {
-        sprites.destroy(playerShootDown)
-    }
+    pause(500)
+    fire_cooldown = 0
 })
-let playerShootDown: Dart = null
-let playerShootleft: Dart = null
-let playerShootUp: Dart = null
-let playerShootright: Dart = null
+let projectile: Sprite = null
+let fire_cooldown = 0
+let direction = 0
 let dinoe: Sprite = null
 let dione2: Sprite = null
 let PLAYER_SPRITE: Sprite = null
