@@ -2,6 +2,7 @@ namespace SpriteKind {
     export const Enemey2 = SpriteKind.create()
     export const warning = SpriteKind.create()
     export const meteor = SpriteKind.create()
+    export const invisible = SpriteKind.create()
 }
 let myDart = 0
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -68,6 +69,7 @@ sprites.onDestroyed(SpriteKind.Enemey2, function (sprite) {
     statusbarMob2.setLabel("HP")
     statusbarMob2.attachToSprite(dione2)
     dione2.follow(PLAYER_SPRITE, 10)
+    dione2.setBounceOnWall(true)
 })
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     direction = 3
@@ -92,6 +94,7 @@ sprites.onDestroyed(SpriteKind.Enemy, function (sprite) {
     dinoe.setPosition(randint(0, 157), randint(0, 120))
     statusbarMobs.attachToSprite(dinoe)
     dinoe.follow(PLAYER_SPRITE, 10)
+    dinoe.setBounceOnWall(true)
 })
 function dino2_stomp () {
     dione2.follow(PLAYER_SPRITE, 0)
@@ -99,6 +102,7 @@ function dino2_stomp () {
     pause(1000)
     dione2.follow(PLAYER_SPRITE, 10)
 }
+let dash: Sprite = null
 let shadow: Sprite = null
 let bigrock: Sprite = null
 let projectile: Sprite = null
@@ -129,6 +133,9 @@ scene.setBackgroundImage(assets.image`Level1`)
 PLAYER_SPRITE = sprites.create(assets.image`Player`, SpriteKind.Player)
 dione2 = sprites.create(assets.image`myImage3`, SpriteKind.Enemey2)
 dinoe = sprites.create(assets.image`dino2`, SpriteKind.Enemy)
+dinoe.setBounceOnWall(true)
+PLAYER_SPRITE.setBounceOnWall(true)
+dione2.setBounceOnWall(true)
 dinoe.setPosition(21, 86)
 dione2.setPosition(47, 11)
 // Movement
@@ -488,6 +495,34 @@ forever(function () {
     music.play(music.createSong(hex`003c000408050200001c00010a006400f401640000040000000000000000000000000005000004060040004800012c01001c000f05001202c102c20100040500280000006400280003140006020004ea0000000400012004000600011b06000800011b08000a0001190a000c00011b0e000f00012010001200012012001400012414001600012516001800012724002800012728002a0001272a002c0001292c002e00012a2e003000012c40004800012c48005000012a5000580001275c006000012760006400012565006600012566006700012767006800012972007600012776007800012578007a0001247a007c0001247d007e0001247e007f0001257f008000012788008c0001258c008e0001248e00900001229000920001229300940001229400950001249500960001259c009e0001299e00a0000127`), music.PlaybackMode.UntilDone)
     music.play(music.createSong(hex`00f0000408010101001c000f05001202c102c20100040500280000006400280003140006020004240000000400011b04000800011b08000c00011b14001800011b18001c00011b1c002000011b`), music.PlaybackMode.UntilDone)
     music.play(music.createSong(hex`00f0000408010101001c000f05001202c102c201000405002800000064002800031400060200041e0000000400011b04000800011b08000c00011b18001c00011b1c002000011b`), music.PlaybackMode.UntilDone)
+})
+forever(function () {
+    pause(5000)
+    dash = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.invisible)
+    dash.follow(PLAYER_SPRITE, 100)
+    pause(100)
+    dinoe.follow(PLAYER_SPRITE, 0)
+    dinoe.setVelocity(dash.vx, dash.vy)
+    sprites.destroy(dash)
+    pause(1000)
+    dinoe.follow(PLAYER_SPRITE, 10)
 })
 forever(function () {
     pause(5000)
