@@ -9,7 +9,7 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     direction = 0
 })
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (0 == 0) {
+    if (fireball_avadibility == 0) {
         if (fire_cooldown == 0) {
             fire_cooldown = 1
             if (direction == 0) {
@@ -25,6 +25,7 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
                 projectile = sprites.createProjectileFromSprite(assets.image`down`, PLAYER_SPRITE, 0, 50)
             }
             pause(100)
+            statusbar.value += -20
         }
     }
 })
@@ -115,6 +116,7 @@ let shadow: Sprite = null
 let bigrock: Sprite = null
 let projectile: Sprite = null
 let fire_cooldown = 0
+let fireball_avadibility = 0
 let direction = 0
 let dino_1_srength = 0
 let dino_2_strength = 0
@@ -156,6 +158,12 @@ dione2.follow(PLAYER_SPRITE, 10)
 dino_2_strength = 200
 dino_1_srength = 100
 statusbarMob2.value = 200
+let mana = statusbars.create(20, 4, StatusBarKind.Health)
+mana.setLabel("mana")
+mana.attachToSprite(PLAYER_SPRITE, 10, 0)
+mana.max = 100
+mana.setColor(8, 15)
+mana.value = 0
 game.onUpdate(function () {
     characterAnimations.runFrames(
     dinoe,
@@ -530,6 +538,11 @@ forever(function () {
     sprites.destroy(dash)
     pause(1000)
     dinoe.follow(PLAYER_SPRITE, 10)
+})
+forever(function () {
+    if (statusbar.value < 20) {
+        fireball_avadibility = 1
+    }
 })
 forever(function () {
     pause(5000)
