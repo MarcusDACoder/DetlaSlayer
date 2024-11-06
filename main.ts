@@ -146,7 +146,6 @@ if (controller.A.isPressed()) {
     statusbarMobs.max = 100
     statusbarMob2.max = 200
     statusbar.max = 100
-    // Rendering section
     scene.setBackgroundImage(assets.image`Level1`)
     PLAYER_SPRITE = sprites.create(assets.image`Player`, SpriteKind.Player)
     dione2 = sprites.create(assets.image`myImage3`, SpriteKind.Enemey2)
@@ -167,7 +166,7 @@ if (controller.A.isPressed()) {
     dino_1_srength = 100
     statusbarMob2.value = 200
     mana = statusbars.create(20, 4, StatusBarKind.Health)
-    mana.setLabel("mana")
+    mana.setLabel("Mana")
     mana.attachToSprite(PLAYER_SPRITE, 10, 0)
     mana.max = 100
     mana.setColor(8, 9)
