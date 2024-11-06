@@ -3,6 +3,7 @@ namespace SpriteKind {
     export const warning = SpriteKind.create()
     export const meteor = SpriteKind.create()
     export const invisible = SpriteKind.create()
+    export const StartScreen = SpriteKind.create()
 }
 let myDart = 0
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -118,6 +119,7 @@ let projectile: Sprite = null
 let fire_cooldown = 0
 let fireball_avadibility = 0
 let direction = 0
+let mana: StatusBarSprite = null
 let dino_1_srength = 0
 let dino_2_strength = 0
 let dinoe: Sprite = null
@@ -126,44 +128,51 @@ let PLAYER_SPRITE: Sprite = null
 let statusbar: StatusBarSprite = null
 let statusbarMobs: StatusBarSprite = null
 let statusbarMob2: StatusBarSprite = null
-statusbarMob2 = statusbars.create(10, 4, StatusBarKind.EnemyHealth)
-statusbarMobs = statusbars.create(10, 4, StatusBarKind.EnemyHealth)
-statusbar = statusbars.create(10, 4, StatusBarKind.Health)
-statusbarMobs.setLabel("HP")
-statusbarMob2.setLabel("HP")
-statusbar.setLabel("HP")
-statusbarMob2.value = 200
-statusbarMobs.value = 100
-statusbar.value = 100
-statusbarMobs.max = 100
-statusbarMob2.max = 200
-statusbar.max = 100
-// Rendering section
-scene.setBackgroundImage(assets.image`Level1`)
-PLAYER_SPRITE = sprites.create(assets.image`Player`, SpriteKind.Player)
-dione2 = sprites.create(assets.image`myImage3`, SpriteKind.Enemey2)
-dinoe = sprites.create(assets.image`dino2`, SpriteKind.Enemy)
-dinoe.setBounceOnWall(true)
-PLAYER_SPRITE.setBounceOnWall(true)
-dione2.setBounceOnWall(true)
-dinoe.setPosition(21, 86)
-dione2.setPosition(47, 11)
-// Movement
-controller.moveSprite(PLAYER_SPRITE, 65, 65)
-statusbarMobs.attachToSprite(dinoe)
-statusbarMob2.attachToSprite(dione2)
-statusbar.attachToSprite(PLAYER_SPRITE)
-dinoe.follow(PLAYER_SPRITE, 10)
-dione2.follow(PLAYER_SPRITE, 10)
-dino_2_strength = 200
-dino_1_srength = 100
-statusbarMob2.value = 200
-let mana = statusbars.create(20, 4, StatusBarKind.Health)
-mana.setLabel("mana")
-mana.attachToSprite(PLAYER_SPRITE, 10, 0)
-mana.max = 100
-mana.setColor(8, 15)
-mana.value = 0
+let startOn = sprites.create(assets.image`myImage2`, SpriteKind.StartScreen)
+startOn.sayText("Press \"A\"", 10000000000, false)
+scene.setBackgroundImage(assets.image`myImage4`)
+game.showLongText("Press A button to start! Thank you for playing!", DialogLayout.Bottom)
+if (controller.A.isPressed()) {
+    sprites.destroy(startOn, effects.disintegrate, 500)
+    statusbarMob2 = statusbars.create(10, 4, StatusBarKind.EnemyHealth)
+    statusbarMobs = statusbars.create(10, 4, StatusBarKind.EnemyHealth)
+    statusbar = statusbars.create(10, 4, StatusBarKind.Health)
+    statusbarMobs.setLabel("HP")
+    statusbarMob2.setLabel("HP")
+    statusbar.setLabel("HP")
+    statusbarMob2.value = 200
+    statusbarMobs.value = 100
+    statusbar.value = 100
+    statusbarMobs.max = 100
+    statusbarMob2.max = 200
+    statusbar.max = 100
+    // Rendering section
+    scene.setBackgroundImage(assets.image`Level1`)
+    PLAYER_SPRITE = sprites.create(assets.image`Player`, SpriteKind.Player)
+    dione2 = sprites.create(assets.image`myImage3`, SpriteKind.Enemey2)
+    dinoe = sprites.create(assets.image`dino2`, SpriteKind.Enemy)
+    dinoe.setBounceOnWall(true)
+    PLAYER_SPRITE.setBounceOnWall(true)
+    dione2.setBounceOnWall(true)
+    dinoe.setPosition(21, 86)
+    dione2.setPosition(47, 11)
+    // Movement
+    controller.moveSprite(PLAYER_SPRITE, 65, 65)
+    statusbarMobs.attachToSprite(dinoe)
+    statusbarMob2.attachToSprite(dione2)
+    statusbar.attachToSprite(PLAYER_SPRITE)
+    dinoe.follow(PLAYER_SPRITE, 10)
+    dione2.follow(PLAYER_SPRITE, 10)
+    dino_2_strength = 200
+    dino_1_srength = 100
+    statusbarMob2.value = 200
+    mana = statusbars.create(20, 4, StatusBarKind.Health)
+    mana.setLabel("mana")
+    mana.attachToSprite(PLAYER_SPRITE, 10, 0)
+    mana.max = 100
+    mana.setColor(8, 9)
+    mana.value = 0
+}
 game.onUpdate(function () {
     characterAnimations.runFrames(
     dinoe,
