@@ -52,6 +52,17 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
 sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Projectile, function (sprite, otherSprite) {
     statusbarMobs.value = statusbarMobs.value - 2
 })
+function summon_dino_2 () {
+    dino_2_strength = dino_2_strength + 5
+    statusbarMob2 = statusbars.create(20, 4, StatusBarKind.EnemyHealth)
+    statusbarMob2.value = dino_2_strength
+    dione2 = sprites.create(assets.image`myImage3`, SpriteKind.Enemey2)
+    dione2.setPosition(randint(0, 157), randint(0, 120))
+    statusbarMob2.setLabel("HP")
+    statusbarMob2.attachToSprite(dione2)
+    dione2.follow(PLAYER_SPRITE, 10)
+    dione2.setBounceOnWall(true)
+}
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite2, otherSprite2) {
     pause(200)
     statusbar.value = statusbar.value - 5
@@ -63,15 +74,7 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     direction = 1
 })
 sprites.onDestroyed(SpriteKind.Enemey2, function (sprite) {
-    dino_2_strength = dino_2_strength + 5
-    statusbarMob2 = statusbars.create(20, 4, StatusBarKind.EnemyHealth)
-    statusbarMob2.value = dino_2_strength
-    dione2 = sprites.create(assets.image`myImage3`, SpriteKind.Enemey2)
-    dione2.setPosition(randint(0, 157), randint(0, 120))
-    statusbarMob2.setLabel("HP")
-    statusbarMob2.attachToSprite(dione2)
-    dione2.follow(PLAYER_SPRITE, 10)
-    dione2.setBounceOnWall(true)
+    summon_dino_2()
 })
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     direction = 3
@@ -88,6 +91,9 @@ controller.B.onEvent(ControllerButtonEvent.Released, function () {
     fire_cooldown = 0
 })
 sprites.onDestroyed(SpriteKind.Enemy, function (sprite) {
+    summon_dino_1()
+})
+function summon_dino_1 () {
     dino_1_srength = dino_1_srength + 5
     statusbarMobs = statusbars.create(20, 4, StatusBarKind.EnemyHealth)
     statusbarMobs.value = dino_1_srength
@@ -97,7 +103,7 @@ sprites.onDestroyed(SpriteKind.Enemy, function (sprite) {
     statusbarMobs.attachToSprite(dinoe)
     dinoe.follow(PLAYER_SPRITE, 10)
     dinoe.setBounceOnWall(true)
-})
+}
 function dino2_stomp () {
     dione2.follow(PLAYER_SPRITE, 0)
     dione2.setVelocity(0, 0)
