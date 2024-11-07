@@ -10,23 +10,25 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     direction = 0
 })
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (fireball_avadibility == 0) {
-        if (fire_cooldown == 0) {
-            fire_cooldown = 1
-            if (direction == 0) {
-                projectile = sprites.createProjectileFromSprite(assets.image`up`, PLAYER_SPRITE, 0, -50)
+    let mamaAva = 0
+    if (mamaAva < 0) {
+        if (fireball_avadibility == 0) {
+            if (fire_cooldown == 0) {
+                fire_cooldown = 1
+                if (direction == 0) {
+                    projectile = sprites.createProjectileFromSprite(assets.image`up`, PLAYER_SPRITE, 0, -50)
+                }
+                if (direction == 1) {
+                    projectile = sprites.createProjectileFromSprite(assets.image`right`, PLAYER_SPRITE, 50, 0)
+                }
+                if (direction == 2) {
+                    projectile = sprites.createProjectileFromSprite(assets.image`left`, PLAYER_SPRITE, -50, 0)
+                }
+                if (direction == 3) {
+                    projectile = sprites.createProjectileFromSprite(assets.image`down`, PLAYER_SPRITE, 0, 50)
+                }
+                pause(100)
             }
-            if (direction == 1) {
-                projectile = sprites.createProjectileFromSprite(assets.image`right`, PLAYER_SPRITE, 50, 0)
-            }
-            if (direction == 2) {
-                projectile = sprites.createProjectileFromSprite(assets.image`left`, PLAYER_SPRITE, -50, 0)
-            }
-            if (direction == 3) {
-                projectile = sprites.createProjectileFromSprite(assets.image`down`, PLAYER_SPRITE, 0, 50)
-            }
-            pause(100)
-            statusbar.value += -20
         }
     }
 })
@@ -129,11 +131,16 @@ let statusbar: StatusBarSprite = null
 let statusbarMobs: StatusBarSprite = null
 let statusbarMob2: StatusBarSprite = null
 let startOn = sprites.create(assets.image`myImage2`, SpriteKind.StartScreen)
+let isStart = 1
 startOn.sayText("Press \"A\"", 10000000000, false)
+music.play(music.createSong(assets.song`mySong`), music.PlaybackMode.LoopingInBackground)
 scene.setBackgroundImage(assets.image`myImage4`)
 game.showLongText("Press A button to start! Thank you for playing!", DialogLayout.Bottom)
-if (controller.A.isPressed()) {
-    sprites.destroy(startOn, effects.disintegrate, 500)
+if (controller.A.isPressed() && isStart == 1) {
+    isStart = 0
+    isStart = 0
+    sprites.destroy(startOn, effects.fountain, 500)
+    music.stopAllSounds()
     statusbarMob2 = statusbars.create(10, 4, StatusBarKind.EnemyHealth)
     statusbarMobs = statusbars.create(10, 4, StatusBarKind.EnemyHealth)
     statusbar = statusbars.create(10, 4, StatusBarKind.Health)
@@ -170,7 +177,7 @@ if (controller.A.isPressed()) {
     mana.attachToSprite(PLAYER_SPRITE, 10, 0)
     mana.max = 100
     mana.setColor(8, 9)
-    mana.value = 0
+    mana.value = 100
 }
 game.onUpdate(function () {
     characterAnimations.runFrames(
@@ -514,10 +521,12 @@ game.onUpdate(function () {
     }
 })
 forever(function () {
-    music.play(music.createSong(hex`003c000408050101001c000f05001202c102c20100040500280000006400280003140006020004020100000400012004000600011b06000800011b08000a0001190a000c00011b0e000f00012010001200012012001400012414001600012516001800012724002800012728002a0001272a002c0001292c002e00012a2e003000012c3e004000012c40004200012c42004400012c44004600012946004800012a4a004c0001294c004e0001275c006000012760006400012565006600012566006700012767006800012972007600012776007800012578007a0001247a007c0001247d007e0001247e007f0001257f008000012788008c0001258c008e0001248e00900001229000920001229300940001229400950001249500960001259a009b0001299d009e000127`), music.PlaybackMode.UntilDone)
-    music.play(music.createSong(hex`00f0000408020101001c000f05001202c102c20100040500280000006400280003140006020004420000000400011b04000800011b08000c00011b14001800011b18001c00011b1c002000011b28002c00011b2c003000011b30003400011b3a003c00011b3c004000011b`), music.PlaybackMode.UntilDone)
-    music.play(music.createSong(hex`003c000408050200001c00010a006400f401640000040000000000000000000000000005000004060040004800012c01001c000f05001202c102c20100040500280000006400280003140006020004ea0000000400012004000600011b06000800011b08000a0001190a000c00011b0e000f00012010001200012012001400012414001600012516001800012724002800012728002a0001272a002c0001292c002e00012a2e003000012c40004800012c48005000012a5000580001275c006000012760006400012565006600012566006700012767006800012972007600012776007800012578007a0001247a007c0001247d007e0001247e007f0001257f008000012788008c0001258c008e0001248e00900001229000920001229300940001229400950001249500960001259c009e0001299e00a0000127`), music.PlaybackMode.UntilDone)
-    music.play(music.createSong(hex`00f0000408020101001c000f05001202c102c20100040500280000006400280003140006020004420000000400011b04000800011b08000c00011b14001800011b18001c00011b1c002000011b28002c00011b2c003000011b30003400011b3a003c00011b3c004000011b`), music.PlaybackMode.UntilDone)
+    if (isStart == 0) {
+        music.play(music.createSong(hex`003c000408050101001c000f05001202c102c20100040500280000006400280003140006020004020100000400012004000600011b06000800011b08000a0001190a000c00011b0e000f00012010001200012012001400012414001600012516001800012724002800012728002a0001272a002c0001292c002e00012a2e003000012c3e004000012c40004200012c42004400012c44004600012946004800012a4a004c0001294c004e0001275c006000012760006400012565006600012566006700012767006800012972007600012776007800012578007a0001247a007c0001247d007e0001247e007f0001257f008000012788008c0001258c008e0001248e00900001229000920001229300940001229400950001249500960001259a009b0001299d009e000127`), music.PlaybackMode.UntilDone)
+        music.play(music.createSong(hex`00f0000408020101001c000f05001202c102c20100040500280000006400280003140006020004420000000400011b04000800011b08000c00011b14001800011b18001c00011b1c002000011b28002c00011b2c003000011b30003400011b3a003c00011b3c004000011b`), music.PlaybackMode.UntilDone)
+        music.play(music.createSong(hex`003c000408050200001c00010a006400f401640000040000000000000000000000000005000004060040004800012c01001c000f05001202c102c20100040500280000006400280003140006020004ea0000000400012004000600011b06000800011b08000a0001190a000c00011b0e000f00012010001200012012001400012414001600012516001800012724002800012728002a0001272a002c0001292c002e00012a2e003000012c40004800012c48005000012a5000580001275c006000012760006400012565006600012566006700012767006800012972007600012776007800012578007a0001247a007c0001247d007e0001247e007f0001257f008000012788008c0001258c008e0001248e00900001229000920001229300940001229400950001249500960001259c009e0001299e00a0000127`), music.PlaybackMode.UntilDone)
+        music.play(music.createSong(hex`00f0000408020101001c000f05001202c102c20100040500280000006400280003140006020004420000000400011b04000800011b08000c00011b14001800011b18001c00011b1c002000011b28002c00011b2c003000011b30003400011b3a003c00011b3c004000011b`), music.PlaybackMode.UntilDone)
+    }
 })
 forever(function () {
     pause(5000)
