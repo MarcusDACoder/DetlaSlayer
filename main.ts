@@ -10,8 +10,7 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     direction = 0
 })
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
-    let mamaAva = 0
-    if (mamaAva < 0) {
+    if (mamaAva == 0) {
         if (fireball_avadibility == 0) {
             if (fire_cooldown == 0) {
                 fire_cooldown = 1
@@ -27,6 +26,7 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
                 if (direction == 3) {
                     projectile = sprites.createProjectileFromSprite(assets.image`down`, PLAYER_SPRITE, 0, 50)
                 }
+                mana.value += -20
                 pause(100)
             }
         }
@@ -35,6 +35,17 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
 sprites.onOverlap(SpriteKind.Enemey2, SpriteKind.Projectile, function (sprite, otherSprite) {
     statusbarMob2.value = statusbarMob2.value - 2
 })
+function summon_dino_1 () {
+    dino_1_srength = dino_1_srength + 5
+    statusbarMobs = statusbars.create(20, 4, StatusBarKind.EnemyHealth)
+    statusbarMobs.value = dino_1_srength
+    statusbarMobs.setLabel("HP")
+    dinoe = sprites.create(assets.image`dino2`, SpriteKind.Enemy)
+    dinoe.setPosition(randint(0, 157), randint(0, 120))
+    statusbarMobs.attachToSprite(dinoe)
+    dinoe.follow(PLAYER_SPRITE, 10)
+    dinoe.setBounceOnWall(true)
+}
 sprites.onOverlap(SpriteKind.Player, SpriteKind.meteor, function (sprite, otherSprite) {
     statusbar.value += -5
     pause(500)
@@ -56,6 +67,13 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
 sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Projectile, function (sprite, otherSprite) {
     statusbarMobs.value = statusbarMobs.value - 2
 })
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite2, otherSprite2) {
+    pause(200)
+    statusbar.value = statusbar.value - 5
+    dinoe.follow(PLAYER_SPRITE, 0)
+    pause(200)
+    dinoe.follow(PLAYER_SPRITE, 30)
+})
 function summon_dino_2 () {
     dino_2_strength = dino_2_strength + 5
     statusbarMob2 = statusbars.create(20, 4, StatusBarKind.EnemyHealth)
@@ -67,16 +85,15 @@ function summon_dino_2 () {
     dione2.follow(PLAYER_SPRITE, 10)
     dione2.setBounceOnWall(true)
 }
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite2, otherSprite2) {
-    pause(200)
-    statusbar.value = statusbar.value - 5
-    dinoe.follow(PLAYER_SPRITE, 0)
-    pause(200)
-    dinoe.follow(PLAYER_SPRITE, 30)
-})
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     direction = 1
 })
+function dino2_stomp () {
+    dione2.follow(PLAYER_SPRITE, 0)
+    dione2.setVelocity(0, 0)
+    pause(1000)
+    dione2.follow(PLAYER_SPRITE, 10)
+}
 sprites.onDestroyed(SpriteKind.Enemey2, function (sprite) {
     summon_dino_2()
 })
@@ -97,29 +114,13 @@ controller.B.onEvent(ControllerButtonEvent.Released, function () {
 sprites.onDestroyed(SpriteKind.Enemy, function (sprite) {
     summon_dino_1()
 })
-function summon_dino_1 () {
-    dino_1_srength = dino_1_srength + 5
-    statusbarMobs = statusbars.create(20, 4, StatusBarKind.EnemyHealth)
-    statusbarMobs.value = dino_1_srength
-    statusbarMobs.setLabel("HP")
-    dinoe = sprites.create(assets.image`dino2`, SpriteKind.Enemy)
-    dinoe.setPosition(randint(0, 157), randint(0, 120))
-    statusbarMobs.attachToSprite(dinoe)
-    dinoe.follow(PLAYER_SPRITE, 10)
-    dinoe.setBounceOnWall(true)
-}
-function dino2_stomp () {
-    dione2.follow(PLAYER_SPRITE, 0)
-    dione2.setVelocity(0, 0)
-    pause(1000)
-    dione2.follow(PLAYER_SPRITE, 10)
-}
 let dash: Sprite = null
 let shadow: Sprite = null
 let bigrock: Sprite = null
 let projectile: Sprite = null
 let fire_cooldown = 0
 let fireball_avadibility = 0
+let mamaAva = 0
 let direction = 0
 let mana: StatusBarSprite = null
 let dino_1_srength = 0
@@ -518,6 +519,13 @@ game.onUpdate(function () {
     if (statusbarMob2.value == 0) {
         sprites.destroy(statusbarMob2, effects.fire, 500)
         sprites.destroy(dione2, effects.fire, 500)
+    }
+})
+game.onUpdate(function () {
+    if (mana.value < 20) {
+        mamaAva = 1
+    } else {
+        mamaAva = 0
     }
 })
 forever(function () {
