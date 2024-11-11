@@ -4,6 +4,7 @@ namespace SpriteKind {
     export const meteor = SpriteKind.create()
     export const invisible = SpriteKind.create()
     export const StartScreen = SpriteKind.create()
+    export const Sword = SpriteKind.create()
 }
 let myDart = 0
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -46,6 +47,50 @@ function summon_dino_1 () {
     dinoe.follow(PLAYER_SPRITE, 10)
     dinoe.setBounceOnWall(true)
 }
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (!(swinging_sword)) {
+        swinging_sword = true
+        sword.setImage(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . e . e e e . . . . . 
+            . . . . e e e e e e e e . . . . 
+            . . . . e e e e . e e e e . . . 
+            . . . e e e e e . e e . e . . . 
+            . . e e e . e e . e . e e e . . 
+            . e . e e . e . . e . e e e . . 
+            . e e . e . e . . e . e . e . . 
+            e . e . e . e . e . . e . e . . 
+            e . e . e e e . e . e e . e . . 
+            . e . e . e e e e e e . e e . . 
+            . e e . e . e e e e e e e . . . 
+            . . . e e e . . e . e e e . . . 
+            . . . . . e e e e e e e . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `)
+        pause(200)
+        sword.setImage(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `)
+        swinging_sword = false
+    }
+    pause(50)
+})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.meteor, function (sprite, otherSprite) {
     statusbar.value += -5
     pause(500)
@@ -94,6 +139,9 @@ function dino2_stomp () {
     pause(1000)
     dione2.follow(PLAYER_SPRITE, 10)
 }
+sprites.onOverlap(SpriteKind.Sword, SpriteKind.Enemey2, function (sprite, otherSprite) {
+    statusbarMob2.value += -2
+})
 sprites.onDestroyed(SpriteKind.Enemey2, function (sprite) {
     summon_dino_2()
 })
@@ -111,12 +159,16 @@ controller.B.onEvent(ControllerButtonEvent.Released, function () {
     pause(500)
     fire_cooldown = 0
 })
+sprites.onOverlap(SpriteKind.Sword, SpriteKind.Enemy, function (sprite, otherSprite) {
+    statusbarMobs.value += -2
+})
 sprites.onDestroyed(SpriteKind.Enemy, function (sprite) {
     summon_dino_1()
 })
 let dash: Sprite = null
 let shadow: Sprite = null
 let bigrock: Sprite = null
+let swinging_sword = false
 let projectile: Sprite = null
 let fire_cooldown = 0
 let fireball_avadibility = 0
@@ -131,6 +183,25 @@ let PLAYER_SPRITE: Sprite = null
 let statusbar: StatusBarSprite = null
 let statusbarMobs: StatusBarSprite = null
 let statusbarMob2: StatusBarSprite = null
+let sword: Sprite = null
+sword = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.Sword)
 let startOn = sprites.create(assets.image`myImage2`, SpriteKind.StartScreen)
 let isStart = 1
 startOn.sayText("Press \"A\"", 10000000000, false)
@@ -519,6 +590,21 @@ game.onUpdate(function () {
     if (statusbarMob2.value == 0) {
         sprites.destroy(statusbarMob2, effects.fire, 500)
         sprites.destroy(dione2, effects.fire, 500)
+    }
+})
+game.onUpdate(function () {
+    if (PLAYER_SPRITE.vx < 0) {
+        sword.right = PLAYER_SPRITE.left
+        sword.y = PLAYER_SPRITE.y
+    } else if (PLAYER_SPRITE.vx > 0) {
+        sword.left = PLAYER_SPRITE.right
+        sword.y = PLAYER_SPRITE.y
+    } else if (PLAYER_SPRITE.vy > 0) {
+        sword.top = PLAYER_SPRITE.bottom
+        sword.x = PLAYER_SPRITE.x
+    } else if (PLAYER_SPRITE.vy < 0) {
+        sword.bottom = PLAYER_SPRITE.top
+        sword.x = PLAYER_SPRITE.x
     }
 })
 game.onUpdate(function () {
