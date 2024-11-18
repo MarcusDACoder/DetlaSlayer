@@ -1125,6 +1125,9 @@ forever(function () {
     }
 })
 forever(function () {
+    pause(500)
+})
+forever(function () {
     pause(5000)
     dash = sprites.create(img`
         . . . . . . . . . . . . . . . . 
